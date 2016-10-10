@@ -1,0 +1,169 @@
+# Package information
+PKGNAME            := micrOMEGAs
+MICROMEGAS_VERSION := 4.1.8
+MICROMEGAS_MAJOR   := 4
+MICROMEGAS_MINOR   := 1
+MICROMEGAS_PATCH   := 8
+MICROMEGAS_DIR     := @MICROMEGASDIR@
+
+PROJECTNAME        := @MICROMEGAS_MODEL@
+ABSBASEDIR         := $(MICROMEGAS_DIR)/$(PROJECTNAME)
+
+# Makefile modules
+MODULES            := calchep work src
+
+# the modules add their dependency files to this variable
+ALLDEP  :=
+# the modules add their source files to this variable
+ALLSRC  :=
+# the modules add their libraries to this variable
+ALLLIB  :=
+# the modules add executables to this variable
+ALLEXE  :=
+
+# Variables for compilation
+CXX              := @CXX@
+CPPFLAGS         := $(patsubst %,-I%,$(MODULES)) -I.
+CXXFLAGS         := @CXXFLAGS@
+CXX_DEP_GEN      := @CXX_DEP_GEN@
+CXXFLAGS_DEP_GEN := @CXXFLAGS_DEP_GEN@
+CC               := @CC@
+CFLAGS           := @CFLAGS@
+CC_DEP_GEN       := @CC_DEP_GEN@
+CFLAGS_DEP_GEN   := @CFLAGS_DEP_GEN@
+FC               := @FC@
+FFLAGS           := @FFLAGS@
+FLIBS            := @FLIBS@
+FOR_DEP_GEN      := @FOR_DEP_GEN@
+MAKELIB          := @MAKELIB@
+LIBEXT           := @LIBEXT@
+SHAREDEXT        := @SHARED_LIB_EXT@
+MATHLIBS         := @MATHLIBS@
+DYNAMICLIBS      := @DYNAMICLIBS@
+X11LIBS          := @X11LIBS@
+
+CALCHEP_DIR      := $(MICROMEGAS_DIR)/CalcHEP_src
+CALCHEPFLAGS     := -I$(CALCHEP_DIR)/include
+CALCHEPMODELLIBS := $(CALCHEP_DIR)/lib/dynamic_me.a
+CALCHEPBASELIBS  := $(CALCHEP_DIR)/lib/sqme_aux$(SHAREDEXT) $(CALCHEP_DIR)/lib/libSLHAplus.a $(CALCHEP_DIR)/lib/num_c.a $(CALCHEP_DIR)/lib/ntools.a $(CALCHEP_DIR)/lib/serv.a
+MICROMEGASFLAGS  := -I$(MICROMEGAS_DIR)/sources
+MICROMEGASLIBS   := $(MICROMEGAS_DIR)/sources/micromegas.a
+
+# BEGIN: NOT EXPORTED ##########################################
+FLEXIBLESUSY_DIR := @ABSBASEDIR@
+INSTALL_DIR      := $(ABSBASEDIR)
+# script which installs a file without export markers
+INSTALL_STRIPPED := $(FLEXIBLESUSY_DIR)/config/install_stripped.sh
+
+# END:   NOT EXPORTED ##########################################
+
+.PHONY: all allexec alllib clean-executables \
+        clean mostly-clean clean-dep depend distclean showbuild
+
+all:    alllib allexec
+
+# BEGIN: NOT EXPORTED ##########################################
+install-micro-model::
+	install -d $(INSTALL_DIR)
+	$(INSTALL_STRIPPED) Makefile $(INSTALL_DIR) -m u=rw,g=r,o=r
+# END:   NOT EXPORTED ##########################################
+
+abspathx = $(foreach name,$(1),\
+	$(shell echo '$(abspath $(name))' | sed s/\[\[:space:\]\]/\\\\\&/g))
+
+include $(patsubst %, %/module.mk, $(MODULES))
+
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(MAKECMDGOALS),mostly-clean)
+ifneq ($(MAKECMDGOALS),distclean)
+ifneq ($(MAKECMDGOALS),install-micro-model)
+ifneq ($(MAKECMDGOALS),showbuild)
+ifneq ($(MAKECMDGOALS),depend)
+ifeq ($(findstring clean-,$(MAKECMDGOALS)),)
+ifeq ($(findstring mostly-clean-,$(MAKECMDGOALS)),)
+ifeq ($(findstring distclean-,$(MAKECMDGOALS)),)
+ifeq ($(findstring print-,$(MAKECMDGOALS)),)
+-include $(ALLDEP)
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+
+allexec: $(ALLEXE)
+alllib:  $(ALLLIB)
+
+clean-dep:
+	-rm -f $(ALLDEP)
+
+depend:  clean-dep
+depend:  $(ALLDEP)
+
+%.d: %.cpp
+# -MT '$*.o' ensures that the target contains the full path
+	$(CXX_DEP_GEN) $(CPPFLAGS) $(CXXFLAGS_DEP_GEN) -MM -MP -MG -o $@ -MT '$*.o' $^
+
+%.d: %.c
+# -MT '$*.o' ensures that the target contains the full path
+	$(CC_DEP_GEN) $(CPPFLAGS) $(CFLAGS_DEP_GEN) -MM -MP -MG -o $@ -MT '$*.o' $^
+
+%.d: %.f
+# the sed script ensures that the target contains the full path
+	$(FOR_DEP_GEN) $(CPPFLAGS) -cpp -MM -MP -MG $^ -MT '$*.o' | \
+	sed 's|.*\.o:|$*.o:|' > $@
+
+%.d: %.F
+# the sed script ensures that the target contains the full path
+	$(FC) $(CPPFLAGS) -cpp -MM -MP -MG $^ -MT '$*.o' | \
+	sed 's|.*\.o:|$*.o:|' > $@
+
+clean-executables:
+	-rm -f $(ALLEXE)
+
+distclean::
+# BEGIN: NOT EXPORTED ##########################################
+	-rm -f Makefile
+# END:   NOT EXPORTED ##########################################
+
+showbuild:
+	@echo "PKGNAME            = $(PKGNAME)"
+	@echo "VERSION            = $(MICROMEGAS_VERSION)"
+	@echo "ABSBASEDIR         = $(ABSBASEDIR)"
+	@echo ""
+	@echo "PROJECT            = $(PROJECTNAME)"
+	@echo ""
+	@echo "CXX                = $(CXX)"
+	@echo "CPPFLAGS           = $(CPPFLAGS)"
+	@echo "CXXFLAGS           = $(CXXFLAGS)"
+	@echo "CXX_DEP_GEN        = $(CXX_DEP_GEN)"
+	@echo "CXXFLAGS_DEP_GEN   = $(CXXFLAGS_DEP_GEN)"
+	@echo "CC                 = $(CC)"
+	@echo "CFLAGS             = $(CFLAGS)"
+	@echo "C_DEP_GEN          = $(C_DEP_GEN)"
+	@echo "CFLAGS_DEP_GEN     = $(CFLAGS_DEP_GEN)"
+	@echo "FC                 = $(FC)"
+	@echo "FFLAGS             = $(FFLAGS)"
+	@echo "FLIBS              = $(FLIBS)"
+	@echo "FOR_DEP_GEN        = $(FOR_DEP_GEN)"
+	@echo "MAKELIB            = $(MAKELIB)"
+	@echo "LIBEXT             = $(LIBEXT)"
+	@echo "SHAREDEXT          = $(SHAREDEXT)"
+	@echo "MATHLIBS           = $(MATHLIBS)"
+	@echo "DYNAMICLIBS        = $(DYNAMICLIBS)"
+	@echo "X11LIBS            = $(X11LIBS)"
+	@echo "CALCHEPFLAGS       = $(CALCHEPFLAGS)"
+	@echo "CALCHEPMODELLIBS   = $(CALCHEPMODELLIBS)"
+	@echo "CALCHEPBASELIBS    = $(CALCHEPBASELIBS)"
+	@echo "MICROMEGASFLAGS    = $(MICROMEGASFLAGS)"
+	@echo "MICROMEGASLIBS     = $(MICROMEGASLIBS)"
+	@echo ""
+	@echo "The list of modules to be built:"
+	@echo "--------------------------------"
+	@echo "$(MODULES)"
+
+print-% : ; @echo $* = $($*)

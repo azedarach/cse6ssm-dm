@@ -1,0 +1,9 @@
+is_grid_scan = false;
+m12_lower = 0.0;
+m12_upper = 20000.0;
+Azero_lower = 0.0;
+Azero_upper = 20000.0;
+TanBeta_value = 10.0;
+MuInput_value = 417.0;
+MuInput_at_MS_value = 1;
+total_npts = 60000;
