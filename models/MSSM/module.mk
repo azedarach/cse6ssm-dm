@@ -135,9 +135,13 @@ LIBMSSM_SRC += \
 		$(DIR)/CMSSM_susy_two_scale_convergence_tester.cpp
 
 EXEMSSM_SRC += \
-		$(DIR)/run_database_scan.cpp \
 		$(DIR)/run_semianalytic_CMSSM.cpp \
 		$(DIR)/gridscan_semianalytic_CMSSM.cpp
+
+ifeq ($(ENABLE_SQLITE),yes)
+EXEMSSM_SRC += \
+		$(DIR)/run_database_scan.cpp
+endif
 
 ifneq ($(findstring addons/susyhd_call,$(ADDONS)),)
 EXEMSSM_SRC += \
@@ -356,8 +360,10 @@ $(RUN_CMSSM_EXE): $(RUN_CMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-
 $(RUN_SEMI_CMSSM_EXE): $(RUN_SEMI_CMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
+ifeq ($(ENABLE_SQLITE),yes)
 $(RUN_DATABASE_EXE): $(RUN_DATABASE_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(SQLITELIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
+endif
 
 $(RUN_CMD_LINE_CMSSM_EXE): $(RUN_CMD_LINE_CMSSM_OBJ) $(LIBMSSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
@@ -390,7 +396,10 @@ ifneq ($(findstring two_scale,$(ALGORITHMS)),)
 ALLEXE += $(RUN_CMSSM_EXE) $(RUN_CMD_LINE_CMSSM_EXE) $(GRIDSCAN_CMSSM_EXE) $(SCAN_CMSSM_EXE) $(RUN_lowMSSM_EXE) $(RUN_CMD_LINE_lowMSSM_EXE) $(SCAN_lowMSSM_EXE)
 endif
 ifneq ($(findstring semianalytic,$(ALGORITHMS)),)
-ALLEXE += $(RUN_SEMI_CMSSM_EXE) $(GRIDSCAN_SEMI_CMSSM_EXE) $(RUN_DATABASE_EXE)
+ALLEXE += $(RUN_SEMI_CMSSM_EXE) $(GRIDSCAN_SEMI_CMSSM_EXE)
+ifeq ($(ENABLE_SQLITE),yes)
+ALLEXE += $(RUN_DATABASE_EXE)
+endif
 ifneq ($(findstring addons/susyhd_call,$(ADDONS)),)
 ALLEXE += $(GET_HIGGS_MASS_EXE)
 endif
