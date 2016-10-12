@@ -1,7 +1,7 @@
 # CSE6SSM Spectrum and Dark Matter
 
 Analysis code for studying the mass spectrum and dark matter in the CSE6SSM,
-used for the numerical analysis reported in [arXiv:1610.XXXXX][2-preprint].
+used for the numerical analysis reported in [arXiv:1610.03374][2-preprint].
 
 ## Requirements
 
@@ -29,7 +29,7 @@ To calculate dark matter predictions in the models requires
 
   * [micrOMEGAs][] version 4.1.8
 
-The results reported in arXiv:1610.XXXXX were obtained using
+The results reported in arXiv:1610.03374 were obtained using
 
   * SARAH-4.5.6 running on Mathematica 10.0
   * FlexibleSUSY-1.1.0
@@ -145,7 +145,7 @@ If you use this code in your work please cite
     [Phys. Lett. B760, 19 (2016)][1],
     [arXiv:1512.07040 \[hep-ph\]][1-preprint]
   * P. Athron, D. Harries, R. Nevzorov, and A. G. Williams, (2016),
-    [arXiv:1610.XXXXX \[hep-ph\]][2-preprint]
+    [arXiv:1610.03374 \[hep-ph\]][2-preprint]
 
 The analytic results and micrOMEGAs model files were produced
 using SARAH.  Please also cite the appropriate references for
@@ -206,7 +206,7 @@ please cite the above as well as
 
 [1]: http://dx.doi.org/10.1016/j.physletb.2016.06.040   "Phys. Lett. B760, 19 (2016)"
 [1-preprint]: https://arxiv.org/abs/1512.07040   "arXiv:1512.07040"
-[2-preprint]: https://arxiv.org/abs/1610.XXXXX   "arXiv:1610.XXXXX"
+[2-preprint]: https://arxiv.org/abs/1610.03374   "arXiv:1610.03374"
 [3]: http://dx.doi.org/10.1016/j.cpc.2010.01.011   "Comput. Phys. Commun. 181, 1077 (2010)"
 [3-preprint]: https://arxiv.org/abs/0909.2863   "arXiv:0909.2863"
 [4]: http://dx.doi.org/10.1016/j.cpc.2010.11.030   "Comput. Phys. Commun. 182, 808 (2011)"
