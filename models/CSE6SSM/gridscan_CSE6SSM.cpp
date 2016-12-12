@@ -18,6 +18,7 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
+#include <random>
 #include <sys/time.h>
 
 #include <boost/algorithm/string.hpp>
