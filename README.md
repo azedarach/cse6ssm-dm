@@ -1,5 +1,7 @@
 # CSE6SSM Spectrum and Dark Matter
 
+[![DOI](https://zenodo.org/badge/70434947.svg)](https://zenodo.org/badge/latestdoi/70434947)
+
 Analysis code for studying the mass spectrum and dark matter in the CSE6SSM,
 used for the numerical analysis reported in [arXiv:1610.03374][2-preprint].
 
